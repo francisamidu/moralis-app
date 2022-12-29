@@ -1,21 +1,136 @@
 import { getSession, signOut } from "next-auth/react";
-import styles from "../styles/Home.module.css";
+import Moralis from "moralis";
+import { EvmChain } from "@moralisweb3/common-evm-utils";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 // gets a prop from getServerSideProps
 const User = ({ user }) => {
-  return (
-    <div className={styles.main}>
-      <h4>
-        Web3 Account: <span>{user.address}</span>{" "}
-      </h4>
+  const { address } = user;
+  const [data, setData] = useState({
+    balance: 0,
+    nfts: 0,
+    tokens: 0,
+  });
+  const getNFTs = async () => {
+    try {
+      const allNFTs = [];
 
-      <button
-        className={styles.button}
-        onClick={() => signOut({ callbackUrl: "/signin", redirect: true })}
-      >
-        Sign out
-      </button>
-    </div>
+      const chains = [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
+
+      for (const chain of chains) {
+        const response = await Moralis.EvmApi.nft.getWalletNFTs({
+          address,
+          chain,
+        });
+
+        allNFTs.push(response);
+      }
+
+      setData({
+        ...data,
+        tokens: allNFTs.length,
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const getBalance = async () => {
+    try {
+      const chain = EvmChain.ETHEREUM;
+
+      const response = await Moralis.EvmApi.balance.getNativeBalance({
+        address,
+        chain,
+      });
+
+      setData({
+        ...data,
+        balance: Number(response.toJSON().balance),
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const getTokens = async () => {
+    try {
+      const chain = EvmChain.ETHEREUM;
+
+      const response = await Moralis.EvmApi.token.getWalletTokenBalances({
+        address,
+        chain,
+      });
+
+      const { length } = response.toJSON();
+      setData({
+        ...data,
+        tokens: length,
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  useEffect(() => {
+    Promise.all([getBalance(), getNFTs(), getTokens()]);
+    return () => {};
+  });
+  return (
+    <>
+      <div className="top">
+        <Link href="/">Home</Link>
+        <button
+          className="button"
+          onClick={() => signOut({ callbackUrl: "/signin", redirect: true })}
+        >
+          Sign out
+        </button>
+      </div>
+      <div className="container">
+        <div className="table-container" role="table" aria-label="Information">
+          <div className="flex-table header" role="rowgroup">
+            <div className="flex-row first" role="columnheader">
+              Label
+            </div>
+            <div className="flex-row" role="columnheader">
+              Data
+            </div>
+          </div>
+          <div className="flex-table row" role="rowgroup">
+            <div className="flex-row" role="cell">
+              Web3 Account
+            </div>
+            <div className="flex-row" role="cell">
+              {address}
+            </div>
+          </div>
+          <div className="flex-table row" role="rowgroup">
+            <div className="flex-row" role="cell">
+              Number of NFTs owned
+            </div>
+            <div className="flex-row" role="cell">
+              {data.nfts}
+            </div>
+          </div>
+          <div className="flex-table row" role="rowgroup">
+            <div className="flex-row" role="cell">
+              Number of Tokens owned
+            </div>
+            <div className="flex-row" role="cell">
+              {data.tokens}
+            </div>
+          </div>
+          <div className="flex-table row" role="rowgroup">
+            <div className="flex-row" role="cell">
+              Balance of Account
+            </div>
+            <div className="flex-row" role="cell">
+              {data.balance}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

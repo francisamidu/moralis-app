@@ -3,7 +3,6 @@ import { signIn } from "next-auth/react";
 import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
 import { useAuthRequestChallengeEvm } from "@moralisweb3/next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 
 function SignIn() {
@@ -49,9 +48,9 @@ function SignIn() {
       <Head>
         <title>Authenticate</title>
       </Head>
-      <div className={styles.main}>
+      <div className="main">
         <h3>Web3 Authentication</h3>
-        <button className={styles.button} onClick={() => handleAuth()}>
+        <button className="button" onClick={() => handleAuth()}>
           Authenticate via Metamask
         </button>
       </div>

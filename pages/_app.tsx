@@ -8,6 +8,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/home.scss";
 import { ToastContainer } from "react-toastify";
 
 const { provider, webSocketProvider } = configureChains(defaultChains, [
