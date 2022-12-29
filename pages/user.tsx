@@ -1,4 +1,4 @@
-import { getSession, signOut, useSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import styles from "../styles/Home.module.css";
 
 // gets a prop from getServerSideProps
