@@ -1,4 +1,4 @@
-import { getSession, signOut } from "next-auth/react";
+import { getSession, signOut } from "next-auth/client";
 import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
 import { useEffect, useState } from "react";
@@ -7,7 +7,16 @@ import { toast } from "react-toastify";
 
 // gets a prop from getServerSideProps
 const User = ({ user }) => {
-  const { address } = user;
+  const {
+    user: { address },
+  } = user;
+  const init = async () => {
+    try {
+      await Moralis.start({
+        apiKey: process.env.MORALIS_API_KEY,
+      });
+    } catch (error) {}
+  };
   const [data, setData] = useState({
     balance: 0,
     nfts: 0,
@@ -72,9 +81,11 @@ const User = ({ user }) => {
     }
   };
   useEffect(() => {
-    Promise.all([getBalance(), getNFTs(), getTokens()]);
+    init().then(() => {
+      Promise.all([getBalance(), getNFTs(), getTokens()]);
+    });
     return () => {};
-  });
+  }, []);
   return (
     <>
       <div className="top">
@@ -101,7 +112,7 @@ const User = ({ user }) => {
               Web3 Account
             </div>
             <div className="flex-row" role="cell">
-              {address}
+              {`${address.slice(0, 10)}....`}
             </div>
           </div>
           <div className="flex-table row" role="rowgroup">

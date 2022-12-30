@@ -2,18 +2,28 @@ import NextAuth from "next-auth";
 import { MoralisNextAuthProvider } from "@moralisweb3/next";
 
 export default NextAuth({
+  pages: {
+    signIn: "/login",
+  },
   providers: [MoralisNextAuthProvider()],
-  // adding user info to the user session object
+  // adding user info to the user session
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt(token, user) {
       if (user) {
         token.user = user;
       }
       return token;
     },
-    async session({ session, token }) {
-      (session as { user: unknown }).user = token.user;
+    async session(session, user) {
+      (session as { user: unknown }).user = user;
       return session;
+    },
+    async redirect(url, baseUrl) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      } else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 });

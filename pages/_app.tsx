@@ -5,7 +5,7 @@ import {
   WagmiConfig,
 } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-import { SessionProvider } from "next-auth/react";
+import { Provider } from "next-auth/client";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/home.scss";
@@ -26,9 +26,9 @@ function MyApp({ Component, pageProps }) {
     <>
       <ToastContainer />
       <WagmiConfig client={client}>
-        <SessionProvider session={pageProps.session} refetchInterval={0}>
+        <Provider session={pageProps.session}>
           <Component {...pageProps} />
-        </SessionProvider>
+        </Provider>
       </WagmiConfig>
     </>
   );
