@@ -83,8 +83,7 @@ const User = ({ user }) => {
   };
   useEffect(() => {
     init();
-    return () => {};
-  }, [undefined]);
+  });
   return (
     <>
       <div className="top">
