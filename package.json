@@ -1,7 +1,8 @@
 {
-  "name": "moralis-metamask-login",
+  "name": "moralis-info-dashboard",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -15,7 +16,7 @@
     "ethers": "^5.7.2",
     "moralis": "^2.7.4",
     "next": "^13.0.4",
-    "next-auth": "^4.17.0",
+    "next-auth": "3.25.0",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-toastify": "^9.1.1",
