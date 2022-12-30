@@ -85,7 +85,7 @@ const User = ({ user }) => {
       Promise.all([getBalance(), getNFTs(), getTokens()]);
     });
     return () => {};
-  }, []);
+  }, [getBalance, getNFTs, getTokens]);
   return (
     <>
       <div className="top">
