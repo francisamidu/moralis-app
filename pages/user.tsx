@@ -15,6 +15,7 @@ const User = ({ user }) => {
       await Moralis.start({
         apiKey: process.env.MORALIS_API_KEY,
       });
+      Promise.all([getBalance(), getNFTs(), getTokens()]);
     } catch (error) {}
   };
   const [data, setData] = useState({
@@ -81,11 +82,9 @@ const User = ({ user }) => {
     }
   };
   useEffect(() => {
-    init().then(() => {
-      Promise.all([getBalance(), getNFTs(), getTokens()]);
-    });
+    init();
     return () => {};
-  }, [getBalance, getNFTs, getTokens]);
+  }, [undefined]);
   return (
     <>
       <div className="top">
