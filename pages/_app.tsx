@@ -6,7 +6,7 @@ import {
 } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { Provider } from "next-auth/client";
-import "../styles/globals.css";
+import "../styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/home.scss";
 import { ToastContainer } from "react-toastify";
